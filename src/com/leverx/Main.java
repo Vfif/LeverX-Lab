@@ -1,8 +1,10 @@
 package com.leverx;
 
-public class Main {
+import com.leverx.entity.DogFarm;
 
+public class Main {
     public static void main(String[] args) {
-	// write your code here
+        DogFarm dogFarm = new DogFarm();
+        dogFarm.oneDay();
     }
 }
