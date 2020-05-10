@@ -1,6 +1,5 @@
 package com.leverx.entity;
 
-import com.leverx.entity.*;
 import com.leverx.type.AgeClassification;
 import com.leverx.type.SizeType;
 
@@ -54,7 +53,7 @@ public class DogFarm {
         init();
     }
 
-    public void oneDay(){
+    public void oneDay() {
         staff.feed(dogs);
 
         vet.check(dogs);
