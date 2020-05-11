@@ -49,23 +49,56 @@ public class Dog {
         return type;
     }
 
-    public void eat(){
+    public void eat() {
         hungry = false;
     }
 
-    public void beHungry(){
+    public void beHungry() {
         hungry = true;
     }
 
-    public void recover(){
+    public void recover() {
         healthy = true;
     }
 
-    public void train(){
+    public void train() {
         trained = true;
     }
 
-    public void work(){
+    public void work() {
         beHungry();
+    }
+
+    public static class Builder {
+
+        private int age;
+        private boolean healthy;
+        private boolean hungry;
+        private boolean trained;
+
+        public Builder withAge(int age) {
+            this.age = age;
+            return this;
+        }
+
+        public Builder withHealthy(boolean healthy) {
+            this.healthy = healthy;
+            return this;
+        }
+
+        public Builder withHungry(boolean hungry) {
+            this.hungry = hungry;
+            return this;
+        }
+
+        public Builder withTrained(boolean trained) {
+            this.trained = trained;
+            return this;
+        }
+
+        public Dog build() {
+            return new Dog(age, healthy, hungry, trained);
+        }
+
     }
 }

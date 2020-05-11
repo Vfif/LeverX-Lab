@@ -24,7 +24,12 @@ public class DogFarm {
                     boolean healthy = random.nextBoolean();
                     boolean hungry = true;
                     boolean trained = random.nextBoolean();
-                    dogs.add(new Dog(age, healthy, hungry, trained));
+                    dogs.add(new Dog.Builder()
+                            .withAge(age)
+                            .withHealthy(healthy)
+                            .withHungry(hungry)
+                            .withTrained(trained)
+                            .build());
                 });
     }
 
