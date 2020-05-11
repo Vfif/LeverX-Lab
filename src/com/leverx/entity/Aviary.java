@@ -11,7 +11,7 @@ public class Aviary {
         this.clean = clean;
     }
 
-    void clean(){
+    public void clean(){
         this.clean = true;
     }
 }

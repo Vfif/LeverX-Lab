@@ -49,23 +49,23 @@ public class Dog {
         return type;
     }
 
-    void eat(){
+    public void eat(){
         hungry = false;
     }
 
-    void beHungry(){
+    public void beHungry(){
         hungry = true;
     }
 
-    void recover(){
+    public void recover(){
         healthy = true;
     }
 
-    void train(){
+    public void train(){
         trained = true;
     }
 
-    void work(){
+    public void work(){
         beHungry();
     }
 }
