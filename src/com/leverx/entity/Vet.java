@@ -4,10 +4,12 @@ import java.util.List;
 
 public class Vet {
     public void check(List<Dog> dogs) {
-        dogs.forEach(dog -> {
-            if (!dog.isHealthy()) {
-                dog.recover();
-            }
-        });
+        dogs.stream()
+                .filter(this::isNotHealthy)
+                .forEach(Dog::recover);
+    }
+
+    private boolean isNotHealthy(Dog dog) {
+        return !dog.isHealthy();
     }
 }
