@@ -63,6 +63,7 @@ public class Dog {
 
     public void train() {
         trained = true;
+        beHungry();
     }
 
     public void work() {

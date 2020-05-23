@@ -14,7 +14,6 @@ public class Staff {
 
     public void train(TrainingArea trainingArea, List<Dog> puppies) {
         puppies.forEach(Dog::train);
-        puppies.forEach(Dog::beHungry);
     }
 
     public void setDogsInAviaries(List<Dog> oldDogs, List<Aviary> aviaries) {
