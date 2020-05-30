@@ -18,7 +18,7 @@ public class Comment {
 
     @NotNull
     @Column(name = "post_id", nullable = false)
-    private String text;
+    private int articleId;
 
     @NotNull
     @Column(name = "author_id", nullable = false)
@@ -27,4 +27,46 @@ public class Comment {
     @NotNull
     @Column(name = "created_at", nullable = false)
     private Date createdDate;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(int articleId) {
+        this.articleId = articleId;
+    }
+
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+
 }

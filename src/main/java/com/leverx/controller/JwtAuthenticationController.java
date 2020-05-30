@@ -2,6 +2,8 @@ package com.leverx.controller;
 
 import java.util.Objects;
 
+import com.leverx.model.User;
+import com.leverx.repository.UserRepository;
 import com.leverx.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,12 +36,15 @@ public class JwtAuthenticationController {
 	@Autowired
 	private JwtUserDetailsService jwtUserDetailsService;
 
+	/*@Autowired
+	private UserRepository userRepository;*/
+
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody User user) throws Exception {
 
-		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+		authenticate(user.getEmail(), user.getPassword());
 
-		final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+		final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(user.getEmail());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
 

@@ -22,4 +22,20 @@ public class Tag {
     @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     @JsonBackReference
     private List<Article> newsList = new ArrayList<>();
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public List<Article> getNewsList() {
+        return newsList;
+    }
 }

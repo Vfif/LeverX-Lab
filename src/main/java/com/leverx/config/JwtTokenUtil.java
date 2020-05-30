@@ -27,6 +27,10 @@ public class JwtTokenUtil implements Serializable {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
+    public int getIdFromToken(String token) {
+        return Integer.parseInt(getClaimFromToken(token, Claims::getId));
+    }
+
     public Date getIssuedAtDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getIssuedAt);
     }
@@ -44,6 +48,7 @@ public class JwtTokenUtil implements Serializable {
         Map<String, Object> claims = new HashMap<>();
         return Jwts.builder()
                 .setClaims(claims)
+                .setId("100")
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
@@ -57,7 +62,6 @@ public class JwtTokenUtil implements Serializable {
     }
 
     private boolean ignoreTokenExpiration(String token) {
-        // here you specify tokens, for that the expiration is ignored
         return false;
     }
 
