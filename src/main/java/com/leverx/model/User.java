@@ -1,12 +1,18 @@
 package com.leverx.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 5926468583005150707L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -24,13 +30,42 @@ public class User {
     @Column(name = "password", length = 60, nullable = false)
     private String password;
 
+    @Email
     @NotNull
+    @Pattern(regexp="^[A-Za-z\\d_]{6,}@[a-z]+\\.[a-z]{2,6}$", message="Please provide a valid email address")
     @Column(name = "email", length = 40, nullable = false)
     private String email;
 
     @NotNull
     @Column(name = "created_at", nullable = false)
     private Date createdDate;
+
+    @Column(name = "code")
+    private String code;
+
+    @NotNull
+    @Column(name = "code_created_at")
+    private Date createdCodeDate;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public Date getCreatedCodeDate() {
+        return createdCodeDate;
+    }
+
+    public void setCreatedCodeDate(Date createdCodeDate) {
+        this.createdCodeDate = createdCodeDate;
+    }
 
     public int getId() {
         return id;

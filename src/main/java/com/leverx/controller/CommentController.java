@@ -1,6 +1,6 @@
 package com.leverx.controller;
 
-import com.leverx.config.JwtTokenUtil;
+import com.leverx.util.JwtTokenUtil;
 import com.leverx.model.Comment;
 import com.leverx.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
