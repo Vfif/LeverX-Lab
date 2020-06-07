@@ -32,7 +32,7 @@ public class User implements Serializable {
 
     @Email
     @NotNull
-    @Pattern(regexp="^[A-Za-z\\d_]{6,}@[a-z]+\\.[a-z]{2,6}$", message="Please provide a valid email address")
+    @Pattern(regexp="^[A-Za-z\\d_]{4,}@[a-z]+\\.[a-z]{2,6}$", message="Please provide a valid email address")
     @Column(name = "email", length = 40, nullable = false)
     private String email;
 

@@ -1,11 +1,13 @@
 package com.leverx.service;
 
+import com.leverx.exception.ExpiredConfirmationCodeException;
 import com.leverx.exception.UserAlreadyExistException;
 import com.leverx.model.User;
 import com.leverx.repository.UserRepository;
 import com.leverx.util.MailUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -66,12 +68,19 @@ public class JwtUserDetailsService implements UserDetailsService {
     public boolean activateUserByCode(String code) {
         AtomicBoolean result = new AtomicBoolean(false);
         userRepository.findByCode(code)
-                .filter(user ->// FIXME: 06.06.2020 throw exception
-                        new Date().getTime() - user.getCreatedCodeDate().getTime() < TimeUnit.HOURS.toMillis(LIFE_TIME))
-                .ifPresent(user1 -> {
-                    user1.setCode(null);
-                    userRepository.save(user1);
-                    result.set(true);
+                .ifPresent(user -> {
+                    if (new Date().getTime() - user.getCreatedCodeDate().getTime() < TimeUnit.HOURS.toMillis(LIFE_TIME)) {
+                        user.setCode(null);
+                        userRepository.save(user);
+                        result.set(true);
+                    } else {
+                        try {
+                            sendCode(user);
+                        } catch (MessagingException e) {
+
+                        }
+                        throw new ExpiredConfirmationCodeException("Expired confirmation code. Code was sent again");
+                    }
                 });
         return result.get();
     }
