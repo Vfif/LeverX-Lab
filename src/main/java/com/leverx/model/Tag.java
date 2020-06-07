@@ -17,18 +17,18 @@ public class Tag {
 
     @NotNull
     @Column(name = "name", length = 20, nullable = false)
-    private String firstName;
+    private String name;
 
     @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     @JsonBackReference
     private List<Article> newsList = new ArrayList<>();
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getId() {

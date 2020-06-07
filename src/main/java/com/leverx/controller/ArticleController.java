@@ -4,6 +4,8 @@ import com.leverx.model.Article;
 import com.leverx.model.SearchCriteria;
 import com.leverx.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +29,9 @@ public class ArticleController {
 
     @PostMapping
     public @ResponseBody
-    Article savePost(@RequestBody Article article) {
-        return articleService.save(article);
+    Article savePost(@RequestBody Article article,
+                     @RequestHeader(AUTHORIZATION) String token) {
+        return articleService.save(article, token);
     }
 
     @GetMapping
@@ -50,8 +53,8 @@ public class ArticleController {
         return ResponseEntity.ok("Successfully delete");
     }
 
-    @GetMapping
-    public List<Article> filterArticles(@RequestBody SearchCriteria criteria) {
+    @GetMapping("/filter")
+    public Page<Article> filterArticles(@RequestBody SearchCriteria criteria) {
         return articleService.filterArticles(criteria);
     }
 }
