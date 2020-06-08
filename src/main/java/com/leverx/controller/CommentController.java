@@ -28,7 +28,7 @@ public class CommentController {
                                       @RequestHeader(AUTHORIZATION) String token) {
         int userId = jwtTokenUtil.getIdFromToken(token.substring(7));
         comment.setArticleId(articleId);
-        comment.setCreatedDate(new java.sql.Date(new Date().getTime()));
+        comment.setCreatedDate(new Date());
         return "good";
     }
 

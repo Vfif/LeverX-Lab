@@ -1,22 +1,21 @@
 package com.leverx.controller;
 
+import com.leverx.model.Article;
+import com.leverx.service.TagService;
 import com.leverx.util.MailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/mail")
+@RequestMapping("/articles")
 public class TagController {
-
     @Autowired
-    private MailUtil mailUtil;
+    private TagService tagService;
 
-    @PostMapping
-    public String saveUser() {
-        //mailUtil.sendSignUpVerify("gmariya6666@gmail.com", "login", "code");
-
-        return "good";
+    @GetMapping("/tags")
+    public List<Article> findArticlesByTags(@RequestParam List<String> tags) {
+        return tagService.findArticlesByTags(tags);
     }
 }

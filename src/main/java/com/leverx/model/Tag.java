@@ -21,7 +21,7 @@ public class Tag {
 
     @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     @JsonBackReference
-    private List<Article> newsList = new ArrayList<>();
+    private List<Article> articleList = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -35,7 +35,15 @@ public class Tag {
         return id;
     }
 
-    public List<Article> getNewsList() {
-        return newsList;
+    public List<Article> getArticleList() {
+        return articleList;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setArticleList(List<Article> articleList) {
+        this.articleList = articleList;
     }
 }

@@ -61,7 +61,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         }
         String encodePassword = encoder.encode(user.getPassword());
         user.setPassword(encodePassword);
-        user.setCreatedDate(new java.sql.Date(new Date().getTime()));
+        user.setCreatedDate(new Date());
         sendCode(user);
     }
 
@@ -93,7 +93,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         String code = RandomStringUtils.randomAlphanumeric(CODE_SIZE);
         //mailUtil.sendCode(user, code);
         user.setCode(code);
-        user.setCreatedCodeDate(new java.sql.Date(new Date().getTime()));
+        user.setCreatedCodeDate(new Date());
         userRepository.save(user);
     }
 }

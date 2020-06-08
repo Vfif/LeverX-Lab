@@ -9,7 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.leverx.controller.CommentController.AUTHORIZATION;
 
@@ -34,11 +36,11 @@ public class ArticleController {
         return articleService.save(article, token);
     }
 
-    @GetMapping
+/*    @GetMapping
     public @ResponseBody
     List<Article> findPublicArticles() {
         return articleService.findPublicArticles();
-    }
+    }*/
 
     @GetMapping("/my")
     public @ResponseBody
@@ -53,8 +55,14 @@ public class ArticleController {
         return ResponseEntity.ok("Successfully delete");
     }
 
-    @GetMapping("/filter")
+   /* @GetMapping("/filter")
     public Page<Article> filterArticles(@RequestBody SearchCriteria criteria) {
         return articleService.filterArticles(criteria);
+    }*/
+
+    @GetMapping
+    public void filterArticles(@RequestParam(required = false) Map<String, String> map)  {
+        System.out.println("");
+        //return articleService.filterArticles(criteria);
     }
 }

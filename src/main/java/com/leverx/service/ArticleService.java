@@ -37,8 +37,8 @@ public class ArticleService {
     public Article save(Article article, String token) {
         int authorId = jwtTokenUtil.getIdFromToken(token.substring(7));
         article.setAuthorId(authorId);
-        article.setCreatedDate(new java.sql.Date(new Date().getTime()));
-        article.setUpdatedDate(new java.sql.Date(new Date().getTime()));
+        article.setCreatedDate(new Date());
+        article.setUpdatedDate(new Date());
         return articleRepository.save(article);
     }
 
@@ -84,11 +84,11 @@ public class ArticleService {
         if (newArticle.getState() != null) {
             oldArticle.setState(newArticle.getState());
         }
-        if (newArticle.getTags() != null){
+        if (newArticle.getTags() != null) {
             saveArticleTags(newArticle);
             oldArticle.setTags(newArticle.getTags());
         }
-            oldArticle.setUpdatedDate(new java.sql.Date(new Date().getTime()));
+        oldArticle.setUpdatedDate(new Date());
         return oldArticle;
     }
 
