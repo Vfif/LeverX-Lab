@@ -25,7 +25,10 @@ public class TagService {
     public List<TagCloudElement> getTagCloud() {
         List<Object[]> list = tagRepository.countAllByArticleList();
         return list.stream()
-                .map(e -> new TagCloudElement((String) e[0], (long) e[1]))
+                .map(e -> new TagCloudElement.Builder()
+                        .withTagName((String) e[0])
+                        .withPostCount((long) e[1])
+                        .build())
                 .collect(Collectors.toList());
     }
 }

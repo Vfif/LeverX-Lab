@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Integer> {
-
     Optional<Tag> findByName(String name);
 
     @Query("select t.name, count(a) from Article a join a.tags t GROUP BY t.name")

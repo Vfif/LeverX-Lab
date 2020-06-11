@@ -19,7 +19,7 @@ public class Tag {
     @Column(name = "name", length = 20, nullable = false)
     private String name;
 
-    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "tags")
     @JsonBackReference
     private List<Article> articleList = new ArrayList<>();
 

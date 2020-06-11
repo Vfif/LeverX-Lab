@@ -17,16 +17,24 @@ public class TagCloudElement {
         return postCount;
     }
 
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public void setPostCount(long postCount) {
+        this.postCount = postCount;
+    }
+
     public static class Builder {
         private String tag;
-        private int postCount;
+        private long postCount;
 
         public Builder withTagName(String tagName) {
             this.tag = tagName;
             return this;
         }
 
-        public Builder withPostCount(int postCount) {
+        public Builder withPostCount(long postCount) {
             this.postCount = postCount;
             return this;
         }

@@ -3,20 +3,20 @@ package com.leverx.service;
 import com.leverx.exception.AccessIsDeniedException;
 import com.leverx.exception.ResourceNotFoundException;
 import com.leverx.model.Article;
-import com.leverx.model.SearchCriteria;
 import com.leverx.model.StateType;
 import com.leverx.model.Tag;
 import com.leverx.repository.ArticleRepository;
 import com.leverx.repository.TagRepository;
-import com.leverx.util.JwtTokenUtil;
+import com.leverx.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,28 +28,29 @@ public class ArticleService {
     private TagRepository tagRepository;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private TokenUtil tokenUtil;
 
     public List<Article> findPublicArticles() {
         return articleRepository.findByState(StateType.PUBLIC);
     }
 
     public Article save(Article article, String token) {
-        int authorId = jwtTokenUtil.getIdFromToken(token.substring(7));
+        int authorId = tokenUtil.getIdFromToken(token.substring(7));
         article.setAuthorId(authorId);
         article.setCreatedDate(new Date());
         article.setUpdatedDate(new Date());
+        saveArticleTags(article);
         return articleRepository.save(article);
     }
 
     public List<Article> findMyArticles(String token) {
-        int authorId = jwtTokenUtil.getIdFromToken(token.substring(7));
+        int authorId = tokenUtil.getIdFromToken(token.substring(7));
         return articleRepository.findAllByAuthorId(authorId);
     }
 
 
     public Article editArticle(int articleId, Article article, String token) {
-        int authorId = jwtTokenUtil.getIdFromToken(token.substring(7));
+        int authorId = tokenUtil.getIdFromToken(token.substring(7));
         Article existedArticle = articleRepository
                 .findById(articleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Article with id = " + articleId + " not found"));
@@ -93,7 +94,7 @@ public class ArticleService {
     }
 
     public void deleteArticle(int articleId, String token) {
-        int authorId = jwtTokenUtil.getIdFromToken(token.substring(7));
+        int authorId = tokenUtil.getIdFromToken(token.substring(7));
         Article article = articleRepository
                 .findById(articleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Article with id = " + articleId + " not found"));
@@ -104,15 +105,15 @@ public class ArticleService {
         }
     }
 
-    public Page<Article> filterArticles(SearchCriteria criteria) {
-        Pageable sortAndPagination =
-                PageRequest.of(criteria.getSkip(),
-                        criteria.getLimit(),
-                        criteria.getOrder(),
-                        criteria.getSort());
-        return articleRepository.findAllByTitleAndAuthorId(
-                criteria.getQ(),
-                criteria.getAuthor(),
-                sortAndPagination);
+    public List<Article> filterPublicArticles(Map<String, String> params) {
+        int skip = Integer.parseInt(params.get("skip"));
+        int limit = Integer.parseInt(params.get("limit"));
+        String postTitle = params.get("q");
+        int authorId = Integer.parseInt(params.get("author"));
+        String sortField = params.get("sort");
+        Sort.Direction order = Sort.Direction.fromString(params.get("order"));
+
+        Pageable sortAndPagination = PageRequest.of(skip, limit, order, sortField);
+        return articleRepository.findAllByTitleAndAuthorIdAndState(postTitle, authorId, StateType.PUBLIC, sortAndPagination);
     }
 }

@@ -1,23 +1,19 @@
 package com.leverx.controller;
 
 import com.leverx.model.Article;
-import com.leverx.model.SearchCriteria;
 import com.leverx.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.leverx.controller.CommentController.AUTHORIZATION;
 
 @RestController
 @RequestMapping("/articles")
 public class ArticleController {
+    public static final String AUTHORIZATION = "authorization";
+
     @Autowired
     private ArticleService articleService;
 
@@ -36,11 +32,14 @@ public class ArticleController {
         return articleService.save(article, token);
     }
 
-/*    @GetMapping
+    @GetMapping
     public @ResponseBody
-    List<Article> findPublicArticles() {
-        return articleService.findPublicArticles();
-    }*/
+    List<Article> findAllArticles(@RequestParam Map<String, String> params) {
+        if (params.isEmpty()) {
+            return articleService.findPublicArticles();
+        }
+        return articleService.filterPublicArticles(params);
+    }
 
     @GetMapping("/my")
     public @ResponseBody
@@ -53,16 +52,5 @@ public class ArticleController {
                                                 @RequestHeader(AUTHORIZATION) String token) {
         articleService.deleteArticle(id, token);
         return ResponseEntity.ok("Successfully delete");
-    }
-
-   /* @GetMapping("/filter")
-    public Page<Article> filterArticles(@RequestBody SearchCriteria criteria) {
-        return articleService.filterArticles(criteria);
-    }*/
-
-    @GetMapping
-    public void filterArticles(@RequestParam(required = false) Map<String, String> map)  {
-        System.out.println("");
-        //return articleService.filterArticles(criteria);
     }
 }

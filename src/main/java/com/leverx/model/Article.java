@@ -44,8 +44,7 @@ public class Article implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatedDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    // @JsonManagedReference
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "article_tag",
             joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "id"),

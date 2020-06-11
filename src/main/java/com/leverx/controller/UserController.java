@@ -2,8 +2,8 @@ package com.leverx.controller;
 
 import com.leverx.exception.UserNotActivatedException;
 import com.leverx.model.User;
-import com.leverx.service.JwtUserDetailsService;
-import com.leverx.util.JwtTokenUtil;
+import com.leverx.service.UserService;
+import com.leverx.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,16 +24,16 @@ public class UserController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private TokenUtil tokenUtil;
 
     @Autowired
-    private JwtUserDetailsService jwtUserDetailsService;
+    private UserService userService;
 
     @PostMapping
     @RequestMapping("/create")
     public ResponseEntity<?> saveUser(@RequestBody User user) {
         try {
-            jwtUserDetailsService.save(user);
+            userService.save(user);
             return ResponseEntity.ok(SUCCESS);
         } catch (MessagingException e) {
             return ResponseEntity
@@ -45,10 +45,10 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> createAuthenticationToken(@RequestBody User user) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
-        User existingUser = jwtUserDetailsService.findByEmail(user.getEmail());
-        if (jwtUserDetailsService.isUserNotActivate(existingUser)) {
+        User existingUser = userService.findByEmail(user.getEmail());
+        if (userService.isUserNotActivate(existingUser)) {
             try {
-                jwtUserDetailsService.sendCode(existingUser);
+                userService.sendCode(existingUser);
             } catch (MessagingException e) {
                 return ResponseEntity
                         .status(HttpStatus.SERVICE_UNAVAILABLE)
@@ -56,14 +56,14 @@ public class UserController {
             }
             throw new UserNotActivatedException("User has not been activated. Code was sent again");
         }
-        String token = jwtTokenUtil.generateToken(existingUser);
+        String token = tokenUtil.generateToken(existingUser);
         return ResponseEntity.ok("token: " + token);
     }
 
     @PostMapping
     @RequestMapping("/confirm/{code}")
     public ResponseEntity<String> activateUser(@PathVariable String code) {
-        if (jwtUserDetailsService.activateUserByCode(code)) {
+        if (userService.activateUserByCode(code)) {
             return ResponseEntity
                     .ok()
                     .body("Your account has been activated successfully");

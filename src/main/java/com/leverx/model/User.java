@@ -1,17 +1,16 @@
 package com.leverx.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
-
-    private static final long serialVersionUID = 5926468583005150707L;
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,12 +31,13 @@ public class User implements Serializable {
 
     @Email
     @NotNull
-    @Pattern(regexp="^[A-Za-z\\d_]{4,}@[a-z]+\\.[a-z]{2,6}$", message="Please provide a valid email address")
+    @Pattern(regexp = "^[A-Za-z\\d_]{4,}@[a-z]+\\.[a-z]{2,6}$", message = "Please provide a valid email address")
     @Column(name = "email", length = 40, nullable = false)
     private String email;
 
     @NotNull
     @Column(name = "created_at", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdDate;
 
     @Column(name = "code")
@@ -45,6 +45,7 @@ public class User implements Serializable {
 
     @NotNull
     @Column(name = "code_created_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdCodeDate;
 
     public void setId(int id) {

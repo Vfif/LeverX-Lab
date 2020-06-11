@@ -1,5 +1,7 @@
 package com.leverx.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -14,7 +16,7 @@ public class Comment {
 
     @NotNull
     @Column(name = "message", nullable = false)
-    private String title;
+    private String message;
 
     @NotNull
     @Column(name = "post_id", nullable = false)
@@ -26,6 +28,7 @@ public class Comment {
 
     @NotNull
     @Column(name = "created_at", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdDate;
 
     public int getId() {
@@ -36,12 +39,12 @@ public class Comment {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getMessage() {
+        return message;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public int getArticleId() {

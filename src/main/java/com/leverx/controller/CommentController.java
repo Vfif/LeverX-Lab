@@ -1,50 +1,53 @@
 package com.leverx.controller;
 
-import com.leverx.util.JwtTokenUtil;
 import com.leverx.model.Comment;
-import com.leverx.repository.CommentRepository;
+import com.leverx.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import static com.leverx.controller.ArticleController.AUTHORIZATION;
 
 @RestController
-@RequestMapping("/articles/{id}/comments")
+@RequestMapping("/articles/{article_id}/comments")
 public class CommentController {
-    public static final String AUTHORIZATION = "authorization";
-    @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private CommentService commentService;
 
     @PostMapping
-    public String addCommentToArticle(@PathVariable("id") int articleId,
-                                      @RequestBody Comment comment,
-                                      @RequestHeader(AUTHORIZATION) String token) {
-        int userId = jwtTokenUtil.getIdFromToken(token.substring(7));
-        comment.setArticleId(articleId);
-        comment.setCreatedDate(new Date());
-        return "good";
+    public @ResponseBody
+    Comment saveComment(@PathVariable("article_id") int articleId,
+                        @RequestBody Comment comment,
+                        @RequestHeader(AUTHORIZATION) String token) {
+        return commentService.save(articleId, comment, token);
     }
 
     @GetMapping
-    public List<Comment> findAllCommentsByArticleId(@PathVariable int articleId) {
-        return commentRepository.findByArticleId(articleId);
+    public @ResponseBody
+    List<Comment> findComments(@PathVariable("article_id") int articleId,
+                               @RequestParam Map<String, String> params) {
+        if (params.isEmpty()) {
+            return commentService.findAllComments(articleId);
+        }
+        return commentService.filterComments(articleId, params);
     }
 
-   /* @PutMapping
-    public String editArticleById(@PathVariable int id) {
-        return "good";
+    @GetMapping("/{comment_id}")
+    public @ResponseBody
+    Comment findComment(@PathVariable("article_id") int articleId,
+                        @PathVariable("comment_id") int commentId) {
+        return commentService.findComment(articleId, commentId);
     }
 
-    @PutMapping
-    public String editArticleById(@PathVariable int id) {
-        return "good";
-    }*/
-
+    @DeleteMapping("/{comment_id}")
+    public ResponseEntity<String> deleteArticle(@PathVariable("article_id") int articleId,
+                                                @PathVariable("comment_id") int commentId,
+                                                @RequestHeader(AUTHORIZATION) String token) {
+        commentService.deleteArticle(articleId, commentId, token);
+        return ResponseEntity.ok("Successfully delete");
+    }
 }

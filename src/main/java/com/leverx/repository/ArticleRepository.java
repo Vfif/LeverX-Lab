@@ -19,7 +19,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
     List<Article> findAllByAuthorId(int authorId);
 
-    Page<Article> findAllByTitleAndAuthorId(String title, int authorId, Pageable pageable);
+    List<Article> findAllByTitleAndAuthorIdAndState(String title, int authorId, StateType stateType, Pageable pageable);
 
     @Query("select distinct a from Article a join a.tags t where t.name in :name")
     List<Article> findAllByTags(@Param("name") List<String> tags);

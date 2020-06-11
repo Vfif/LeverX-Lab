@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
-public class JwtUserDetailsService implements UserDetailsService {
+public class UserService implements UserDetailsService {
     public static final int LIFE_TIME = 24;
     private static final int CODE_SIZE = 4;
 

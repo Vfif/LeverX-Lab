@@ -1,14 +1,18 @@
 package com.leverx.repository;
 
 import com.leverx.model.Comment;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
-    List<Comment> findByArticleId(@NotNull int articleId);
+    List<Comment> findAllByArticleId(int articleId);
+
+    Optional<Comment> findByIdAndArticleId(int id, int articleId);
+
+    List<Comment> findAllByArticleIdAndAuthorId(int articleId, int authorId, Pageable pageable);
 }
