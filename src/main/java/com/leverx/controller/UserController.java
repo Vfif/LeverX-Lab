@@ -1,10 +1,7 @@
 package com.leverx.controller;
 
-import com.leverx.exception.UserNotActivatedException;
 import com.leverx.model.User;
 import com.leverx.service.UserService;
-import com.leverx.util.TokenUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,61 +13,61 @@ import javax.mail.MessagingException;
 @RestController
 @RequestMapping("/auth")
 public class UserController {
-    public static final String SUCCESS = "The user was successfully created.\n" +
+    private static final String USER_SUCCESSFULLY_CREATED = "The user was successfully created.\n" +
             "An email with your confirmation code has been sent to you.\n" +
             "Enter received code into /auth/confirm/{code} to activate your account.\n" +
             "Code have a 24 hours life";
-    @Autowired
+    private static final String FAILED_SEND_CODE = "Failed to send confirmation code. Please try again later.";
+    private static final String USER_SUCCESSFULLY_ACTIVATED = "Your account has been activated successfully";
+
+    private UserService userService;
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private TokenUtil tokenUtil;
-
-    @Autowired
-    private UserService userService;
+    public UserController(UserService userService, AuthenticationManager authenticationManager) {
+        this.userService = userService;
+        this.authenticationManager = authenticationManager;
+    }
 
     @PostMapping
     @RequestMapping("/create")
-    public ResponseEntity<?> saveUser(@RequestBody User user) {
+    public ResponseEntity<String> saveUser(@RequestBody User user) {
         try {
             userService.save(user);
-            return ResponseEntity.ok(SUCCESS);
+            return ResponseEntity.ok(USER_SUCCESSFULLY_CREATED);
         } catch (MessagingException e) {
-            return ResponseEntity
-                    .status(HttpStatus.SERVICE_UNAVAILABLE)
-                    .body("Failed to send confirmation code. User is not created");
+            return failedSendCodeResponse();
         }
     }
 
     @PostMapping
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody User user) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
-        User existingUser = userService.findByEmail(user.getEmail());
-        if (userService.isUserNotActivate(existingUser)) {
-            try {
-                userService.sendCode(existingUser);
-            } catch (MessagingException e) {
-                return ResponseEntity
-                        .status(HttpStatus.SERVICE_UNAVAILABLE)
-                        .body("Failed to send confirmation code. User is not created");
-            }
-            throw new UserNotActivatedException("User has not been activated. Code was sent again");
+    public ResponseEntity<String> createToken(@RequestBody User user) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+        try {
+            String token = userService.createToken(user);
+            return ResponseEntity.ok("token: " + token);
+        } catch (MessagingException e) {
+            return failedSendCodeResponse();
         }
-        String token = tokenUtil.generateToken(existingUser);
-        return ResponseEntity.ok("token: " + token);
     }
 
     @PostMapping
     @RequestMapping("/confirm/{code}")
     public ResponseEntity<String> activateUser(@PathVariable String code) {
-        if (userService.activateUserByCode(code)) {
+        try {
+            userService.activateUserByCode(code);
             return ResponseEntity
                     .ok()
-                    .body("Your account has been activated successfully");
+                    .body(USER_SUCCESSFULLY_ACTIVATED);
+        } catch (MessagingException e) {
+            return failedSendCodeResponse();
         }
+    }
+
+    private ResponseEntity<String> failedSendCodeResponse() {
         return ResponseEntity
-                .badRequest()
-                .body("Account not found");
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(FAILED_SEND_CODE);
     }
 }
 

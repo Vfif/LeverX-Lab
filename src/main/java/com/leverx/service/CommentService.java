@@ -17,11 +17,13 @@ import java.util.Map;
 
 @Service
 public class CommentService {
-    @Autowired
     private CommentRepository commentRepository;
-
-    @Autowired
     private TokenUtil tokenUtil;
+
+    public CommentService(CommentRepository commentRepository, TokenUtil tokenUtil) {
+        this.commentRepository = commentRepository;
+        this.tokenUtil = tokenUtil;
+    }
 
     public List<Comment> findAllComments(int articleId) {
         return commentRepository.findAllByArticleId(articleId);

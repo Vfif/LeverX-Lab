@@ -13,9 +13,11 @@ import java.util.Map;
 @RequestMapping("/articles")
 public class ArticleController {
     public static final String AUTHORIZATION = "authorization";
-
-    @Autowired
     private ArticleService articleService;
+
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
 
     @PutMapping("/{id}")
     public @ResponseBody

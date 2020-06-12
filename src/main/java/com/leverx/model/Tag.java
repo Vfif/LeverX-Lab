@@ -1,12 +1,14 @@
 package com.leverx.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "tag")
 public class Tag {
@@ -22,28 +24,4 @@ public class Tag {
     @ManyToMany(mappedBy = "tags")
     @JsonBackReference
     private List<Article> articleList = new ArrayList<>();
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public List<Article> getArticleList() {
-        return articleList;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setArticleList(List<Article> articleList) {
-        this.articleList = articleList;
-    }
 }

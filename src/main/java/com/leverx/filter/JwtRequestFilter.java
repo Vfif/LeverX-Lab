@@ -20,11 +20,13 @@ import java.io.IOException;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    @Autowired
     private UserService userService;
-
-    @Autowired
     private TokenUtil tokenUtil;
+
+    public JwtRequestFilter(UserService userService, TokenUtil tokenUtil) {
+        this.userService = userService;
+        this.tokenUtil = tokenUtil;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -58,5 +60,4 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         chain.doFilter(request, response);
     }
-
 }

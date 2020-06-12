@@ -2,7 +2,6 @@ package com.leverx.controller;
 
 import com.leverx.model.Comment;
 import com.leverx.service.CommentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +13,11 @@ import static com.leverx.controller.ArticleController.AUTHORIZATION;
 @RestController
 @RequestMapping("/articles/{article_id}/comments")
 public class CommentController {
-
-    @Autowired
     private CommentService commentService;
+
+    public CommentController(CommentService commentService) {
+        this.commentService = commentService;
+    }
 
     @PostMapping
     public @ResponseBody

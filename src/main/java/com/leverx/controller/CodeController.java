@@ -1,6 +1,5 @@
 package com.leverx.controller;
 
-import com.leverx.model.Code;
 import com.leverx.repository.CodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +13,7 @@ public class CodeController {
     private CodeRepository codeRepository;
 
     @GetMapping
-    public String get(){
-        codeRepository.save(new Code(1, "123"));
+    public String get() {
         return "good";
     }
 }

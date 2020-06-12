@@ -21,14 +21,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
-    @Autowired
     private ArticleRepository articleRepository;
-
-    @Autowired
     private TagRepository tagRepository;
-
-    @Autowired
     private TokenUtil tokenUtil;
+
+    public ArticleService(ArticleRepository articleRepository, TagRepository tagRepository, TokenUtil tokenUtil) {
+        this.articleRepository = articleRepository;
+        this.tagRepository = tagRepository;
+        this.tokenUtil = tokenUtil;
+    }
 
     public List<Article> findPublicArticles() {
         return articleRepository.findByState(StateType.PUBLIC);

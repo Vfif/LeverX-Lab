@@ -1,33 +1,19 @@
 package com.leverx.model;
 
+import lombok.Builder;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
+import java.util.Date;
 
+@Data
+@Builder
 @RedisHash("code")
 public class Code implements Serializable {
-
-    private int id;
-    private String name;
-
-    public Code(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    @Id
+    private int userId;
+    private String confirmationCode;
+    private Date createdDate;
 }
