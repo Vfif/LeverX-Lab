@@ -1,9 +1,6 @@
 package com.leverx.service;
 
-import com.leverx.exception.ExpiredConfirmationCodeException;
-import com.leverx.exception.ResourceNotFoundException;
-import com.leverx.exception.UserAlreadyExistException;
-import com.leverx.exception.UserNotActivatedException;
+import com.leverx.exception.*;
 import com.leverx.model.Code;
 import com.leverx.model.User;
 import com.leverx.repository.CodeRepository;
@@ -66,9 +63,13 @@ public class UserService implements UserDetailsService {
         return userRepository.existsByEmail(email);
     }
 
-    public Code sendCode(User user) throws MessagingException {
+    public Code sendCode(User user) {
         String confirmationCode = RandomStringUtils.randomAlphanumeric(codeSize);
-        mailUtil.sendCode(user, confirmationCode);
+        try {
+            mailUtil.sendCode(user, confirmationCode);
+        } catch (MessagingException e) {
+            throw new MailException("Failed to send confirmation code. Please try again later.");
+        }
         return Code.builder()
                 .userId(user.getId())
                 .confirmationCode(confirmationCode)
@@ -76,8 +77,8 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    @Transactional // FIXME: 12.06.2020 //(rollbackFor = MessagingException.class)
-    public void save(User user) throws MessagingException {
+    @Transactional
+    public void save(User user) {
         if (isExistUserWithEmail(user.getEmail())) {
             throw new UserAlreadyExistException("User already exist with email " + user.getEmail());
         }
@@ -85,10 +86,11 @@ public class UserService implements UserDetailsService {
         user.setPassword(encodePassword);
         user.setCreatedDate(new Date());
         User newUser = userRepository.save(user);
-        sendCode(newUser);
+        Code code = sendCode(newUser);
+        codeRepository.save(code);
     }
 
-    public void activateUserByCode(String confirmationCode) throws MessagingException {
+    public void activateUserByCode(String confirmationCode) {
         Code code = codeRepository.findByConfirmationCode(confirmationCode).orElseThrow(() ->
                 new ResourceNotFoundException("Account with activation code " + confirmationCode + " not found"));
 
@@ -106,14 +108,14 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean isUserNotActivate(User user) {
-        return codeRepository.existsByUserId(user.getId());
+        return codeRepository.findById(user.getId()).isPresent();
     }
 
-    public String createToken(User user) throws MessagingException {
+    public String createToken(User user) {
         User existingUser = findByEmail(user.getEmail());
         if (isUserNotActivate(existingUser)) {
             Code newCode = sendCode(existingUser);
-            codeRepository.save(newCode);// FIXME: 12.06.2020   check not double code with user id
+            codeRepository.save(newCode);
             throw new UserNotActivatedException("User has not been activated. Code was sent again.");
         }
         return tokenUtil.generateToken(existingUser);

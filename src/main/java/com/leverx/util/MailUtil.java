@@ -1,20 +1,16 @@
 package com.leverx.util;
 
 import com.leverx.model.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.mail.*;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 @Component
 public class MailUtil {
-
     @Value("${mail.text}")
     private String text;
 
@@ -39,7 +35,6 @@ public class MailUtil {
                 return new PasswordAuthentication(SERVER_MAIL, SERVER_PASSWORD);
             }
         });
-
 
         Message message = new MimeMessage(session);
         message.setFrom(new InternetAddress(SERVER_MAIL));
