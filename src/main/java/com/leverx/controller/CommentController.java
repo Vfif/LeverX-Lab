@@ -9,10 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 import static com.leverx.controller.ArticleController.AUTHORIZATION;
+import static com.leverx.controller.ArticleController.DELETE_SUCCESSFULLY;
 
 @RestController
 @RequestMapping("/articles/{article_id}/comments")
 public class CommentController {
+    private static final String COMMENT_ID = "comment_id";
+    private static final String ARTICLE_ID = "article_id";
     private CommentService commentService;
 
     public CommentController(CommentService commentService) {
@@ -21,7 +24,7 @@ public class CommentController {
 
     @PostMapping
     public @ResponseBody
-    Comment saveComment(@PathVariable("article_id") int articleId,
+    Comment saveComment(@PathVariable(ARTICLE_ID) int articleId,
                         @RequestBody Comment comment,
                         @RequestHeader(AUTHORIZATION) String token) {
         return commentService.save(articleId, comment, token);
@@ -29,7 +32,7 @@ public class CommentController {
 
     @GetMapping
     public @ResponseBody
-    List<Comment> findComments(@PathVariable("article_id") int articleId,
+    List<Comment> findComments(@PathVariable(ARTICLE_ID) int articleId,
                                @RequestParam Map<String, String> params) {
         if (params.isEmpty()) {
             return commentService.findAllComments(articleId);
@@ -39,16 +42,16 @@ public class CommentController {
 
     @GetMapping("/{comment_id}")
     public @ResponseBody
-    Comment findComment(@PathVariable("article_id") int articleId,
-                        @PathVariable("comment_id") int commentId) {
+    Comment findComment(@PathVariable(ARTICLE_ID) int articleId,
+                        @PathVariable(COMMENT_ID) int commentId) {
         return commentService.findComment(articleId, commentId);
     }
 
     @DeleteMapping("/{comment_id}")
-    public ResponseEntity<String> deleteArticle(@PathVariable("article_id") int articleId,
-                                                @PathVariable("comment_id") int commentId,
+    public ResponseEntity<String> deleteArticle(@PathVariable(ARTICLE_ID) int articleId,
+                                                @PathVariable(COMMENT_ID) int commentId,
                                                 @RequestHeader(AUTHORIZATION) String token) {
         commentService.deleteArticle(articleId, commentId, token);
-        return ResponseEntity.ok("Successfully delete");
+        return ResponseEntity.ok(DELETE_SUCCESSFULLY);
     }
 }

@@ -3,7 +3,6 @@ package com.leverx.filter;
 import com.leverx.service.UserService;
 import com.leverx.util.TokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

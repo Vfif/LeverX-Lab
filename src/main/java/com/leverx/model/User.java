@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Data
@@ -19,19 +20,23 @@ public class User {
     private int id;
 
     @NotNull
+    @Size(max = 20)
     @Column(name = "first_name", length = 20, nullable = false)
     private String firstName;
 
     @NotNull
+    @Size(max = 20)
     @Column(name = "last_name", length = 20, nullable = false)
     private String lastName;
 
     @NotNull
+    @Size(max = 60)
     @Column(name = "password", length = 60, nullable = false)
     private String password;
 
     @Email
     @NotNull
+    @Size(max = 40)
     @Pattern(regexp = "^[A-Za-z\\d_]{4,}@[a-z]+\\.[a-z]{2,6}$",
             message = "Please provide a valid email address")
     @Column(name = "email", length = 40, nullable = false)

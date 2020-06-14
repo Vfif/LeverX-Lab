@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +21,7 @@ public class Article implements Serializable {
     private int id;
 
     @NotNull
+    @Size(max = 20)
     @Column(name = "title", length = 20, nullable = false)
     private String title;
 

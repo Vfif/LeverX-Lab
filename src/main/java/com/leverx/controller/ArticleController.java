@@ -2,7 +2,6 @@ package com.leverx.controller;
 
 import com.leverx.model.Article;
 import com.leverx.service.ArticleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +12,7 @@ import java.util.Map;
 @RequestMapping("/articles")
 public class ArticleController {
     public static final String AUTHORIZATION = "authorization";
+    public static final String DELETE_SUCCESSFULLY = "Delete successfully";
     private ArticleService articleService;
 
     public ArticleController(ArticleService articleService) {
@@ -53,6 +53,6 @@ public class ArticleController {
     public ResponseEntity<String> deleteArticle(@PathVariable int id,
                                                 @RequestHeader(AUTHORIZATION) String token) {
         articleService.deleteArticle(id, token);
-        return ResponseEntity.ok("Successfully delete");
+        return ResponseEntity.ok(DELETE_SUCCESSFULLY);
     }
 }

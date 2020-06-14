@@ -8,7 +8,7 @@ import com.leverx.model.Tag;
 import com.leverx.repository.ArticleRepository;
 import com.leverx.repository.TagRepository;
 import com.leverx.util.TokenUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ArticleService {
     private ArticleRepository articleRepository;

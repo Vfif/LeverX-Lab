@@ -7,6 +7,7 @@ import com.leverx.repository.CodeRepository;
 import com.leverx.repository.UserRepository;
 import com.leverx.util.MailUtil;
 import com.leverx.util.TokenUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,7 @@ import javax.mail.MessagingException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 public class UserService implements UserDetailsService {
     @Value("${code.lifetime}")
